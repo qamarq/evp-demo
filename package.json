@@ -7,10 +7,11 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "postinstall": "npx @better-auth/cli migrate --config src/lib/auth.ts -y"
+    "migrate": "npx @better-auth/cli migrate --config src/lib/auth.ts -y"
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",
+    "@better-auth/cli": "^1.4.21",
     "better-auth": "^1.7.2",
     "better-auth-evp": "^1.0.2",
     "better-sqlite3": "^13.0.3",
@@ -32,7 +33,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "eslint": "^9",
+    "eslint": "^10.9.1",
     "eslint-config-next": "16.3.4",
     "tailwindcss": "^4",
     "typescript": "^5"
