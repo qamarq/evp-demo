@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -9,39 +9,22 @@ import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field
 import { Input } from "@/components/ui/input";
 import { authClient } from "@/lib/auth-client";
 
-export function LoginForm() {
+export function LoginForm({ nonce }: { nonce: string }) {
   const router = useRouter();
-  const [email, setEmail] = useState("");
-  const [nonce, setNonce] = useState<string | null>(null);
   const [status, setStatus] = useState<"idle" | "verifying" | "failed">(
     "idle",
   );
   const [reason, setReason] = useState<string | null>(null);
-  const tokenInputRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    let cancelled = false;
-    authClient.evp
-      .getNonce()
-      .then(({ data }) => {
-        if (!cancelled && data !== null) {
-          setNonce(data.nonce);
-        }
-      })
-      .catch(() => {
-        setNonce(null);
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, []);
 
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setReason(null);
 
-    const token = tokenInputRef.current?.value;
-    if (token === undefined || token.length === 0 || nonce === null) {
+    const formData = new FormData(event.currentTarget);
+    const email = String(formData.get("email") ?? "");
+    const token = formData.get("token");
+
+    if (typeof token !== "string" || token.length === 0) {
       setStatus("failed");
       setReason("no_browser_support");
       return;
@@ -71,7 +54,7 @@ export function LoginForm() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={onSubmit}>
+          <form onSubmit={onSubmit} noValidate>
             <FieldGroup>
               <Field>
                 <FieldLabel htmlFor="email">Email</FieldLabel>
@@ -81,10 +64,6 @@ export function LoginForm() {
                   type="email"
                   autoComplete="email"
                   required
-                  value={email}
-                  onChange={(event) => {
-                    setEmail(event.target.value);
-                  }}
                   disabled={status === "verifying"}
                   placeholder="you@gmail.com"
                 />
@@ -98,15 +77,12 @@ export function LoginForm() {
                   />
                 ) : null}
               </Field>
-              {nonce === null ? null : (
-                <input
-                  ref={tokenInputRef}
-                  type="hidden"
-                  name="token"
-                  nonce={nonce}
-                  autoComplete="email-verification-token"
-                />
-              )}
+              <input
+                type="hidden"
+                name="token"
+                nonce={nonce}
+                autoComplete="email-verification-token"
+              />
               <Button type="submit" disabled={status === "verifying"}>
                 {status === "verifying" ? "Verifying..." : "Sign in"}
               </Button>

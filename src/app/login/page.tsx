@@ -12,5 +12,7 @@ export default async function LoginPage() {
     redirect("/");
   }
 
-  return <LoginForm />;
+  const { nonce } = await auth.api.evpGetNonce();
+
+  return <LoginForm nonce={nonce} />;
 }
