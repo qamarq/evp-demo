@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -122,33 +123,33 @@ export function LoginForm({ nonce }: { nonce: string }) {
 
         <p>
           Built by{" "}
-          <a
+          <Link
             className="text-foreground underline underline-offset-4"
             href="https://kamilmarczak.pl"
           >
             Kamil Marczak
-          </a>{" "}
+          </Link>{" "}
           (
-          <a
+          <Link
             className="text-foreground underline underline-offset-4"
             href="https://github.com/qamarq"
           >
             GitHub
-          </a>
+          </Link>
           ) on top of{" "}
-          <a
+          <Link
             className="text-foreground underline underline-offset-4"
             href="https://github.com/qamarq/better-auth-evp"
           >
             better-auth-evp
-          </a>{" "}
+          </Link>{" "}
           (
-          <a
+          <Link
             className="text-foreground underline underline-offset-4"
             href="https://www.npmjs.com/package/better-auth-evp"
           >
             npm
-          </a>
+          </Link>
           ), a Better Auth plugin implementing this flow.
         </p>
       </div>
