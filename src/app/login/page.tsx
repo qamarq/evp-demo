@@ -1,118 +1,16 @@
-"use client";
+import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 
-import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { auth } from "@/lib/auth";
 
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
-import { authClient } from "@/lib/auth-client";
+import { LoginForm } from "./login-form";
 
-export default function LoginPage() {
-  const router = useRouter();
-  const [email, setEmail] = useState("");
-  const [nonce, setNonce] = useState<string | null>(null);
-  const [status, setStatus] = useState<"idle" | "verifying" | "failed">(
-    "idle",
-  );
-  const [reason, setReason] = useState<string | null>(null);
-  const tokenInputRef = useRef<HTMLInputElement>(null);
+export default async function LoginPage() {
+  const session = await auth.api.getSession({ headers: await headers() });
 
-  useEffect(() => {
-    let cancelled = false;
-    authClient.evp
-      .getNonce()
-      .then(({ data }) => {
-        if (!cancelled && data !== null) {
-          setNonce(data.nonce);
-        }
-      })
-      .catch(() => {
-        setNonce(null);
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, []);
-
-  async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    setReason(null);
-
-    const token = tokenInputRef.current?.value;
-    if (token === undefined || token.length === 0 || nonce === null) {
-      setStatus("failed");
-      setReason("no_browser_support");
-      return;
-    }
-
-    setStatus("verifying");
-    const { data } = await authClient.evp.verify({ email, token, nonce });
-
-    if (data?.verified === true) {
-      router.push("/");
-      return;
-    }
-
-    setStatus("failed");
-    setReason(data !== null && "reason" in data ? data.reason : "unknown");
+  if (session !== null) {
+    redirect("/");
   }
 
-  return (
-    <div className="flex flex-1 items-center justify-center p-4">
-      <Card className="w-full max-w-sm">
-        <CardHeader>
-          <CardTitle>Sign in</CardTitle>
-          <CardDescription>
-            The only sign-in method here is Chrome&apos;s experimental Email
-            Verification Protocol - no password, no code.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={onSubmit}>
-            <FieldGroup>
-              <Field>
-                <FieldLabel htmlFor="email">Email</FieldLabel>
-                <Input
-                  id="email"
-                  name="email"
-                  type="email"
-                  autoComplete="email"
-                  required
-                  value={email}
-                  onChange={(event) => {
-                    setEmail(event.target.value);
-                  }}
-                  disabled={status === "verifying"}
-                  placeholder="you@gmail.com"
-                />
-                {status === "failed" ? (
-                  <FieldError
-                    errors={[
-                      {
-                        message: `Verification failed (${reason ?? "unknown"}). This almost always means the browser or the mailbox provider doesn't support EVP yet.`,
-                      },
-                    ]}
-                  />
-                ) : null}
-              </Field>
-              {nonce === null ? null : (
-                <input
-                  ref={tokenInputRef}
-                  type="hidden"
-                  name="token"
-                  nonce={nonce}
-                  autoComplete="email-verification-token"
-                />
-              )}
-              <Button type="submit" disabled={status === "verifying"}>
-                {status === "verifying" ? "Verifying..." : "Sign in"}
-              </Button>
-            </FieldGroup>
-          </form>
-        </CardContent>
-      </Card>
-    </div>
-  );
+  return <LoginForm />;
 }
