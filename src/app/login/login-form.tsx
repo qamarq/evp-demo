@@ -44,7 +44,7 @@ export function LoginForm({ nonce }: { nonce: string }) {
   }
 
   return (
-    <div className="flex flex-1 items-center justify-center p-4">
+    <div className="flex flex-1 flex-col items-center justify-center gap-6 p-4">
       <Card className="w-full max-w-sm">
         <CardHeader>
           <CardTitle>Sign in</CardTitle>
@@ -90,6 +90,68 @@ export function LoginForm({ nonce }: { nonce: string }) {
           </form>
         </CardContent>
       </Card>
+
+      <div className="text-muted-foreground w-full max-w-sm space-y-4 text-sm">
+        <div className="space-y-1">
+          <h2 className="text-foreground font-medium">What&apos;s going on here?</h2>
+          <p>
+            Typing your address lets Chrome ask your mailbox provider, behind
+            the scenes, whether you&apos;re currently signed in there. If you
+            are, it quietly stamps a hidden field on this form with proof of
+            that - nothing is typed, copied, or clicked. Submitting the form
+            just hands that proof to this app&apos;s server, which checks it
+            against the mailbox provider before starting your session.
+          </p>
+        </div>
+
+        <div className="space-y-1">
+          <h2 className="text-foreground font-medium">Browser support</h2>
+          <p>
+            Chrome only, and only for builds enrolled in the origin trial -
+            regular stable Chrome won&apos;t do anything special yet.
+          </p>
+        </div>
+
+        <div className="space-y-1">
+          <h2 className="text-foreground font-medium">Mailbox support</h2>
+          <p>
+            Gmail is the only provider live on the protocol right now, so
+            non-Gmail addresses are expected to fail verification here.
+          </p>
+        </div>
+
+        <p>
+          Built by{" "}
+          <a
+            className="text-foreground underline underline-offset-4"
+            href="https://kamilmarczak.pl"
+          >
+            Kamil Marczak
+          </a>{" "}
+          (
+          <a
+            className="text-foreground underline underline-offset-4"
+            href="https://github.com/qamarq"
+          >
+            GitHub
+          </a>
+          ) on top of{" "}
+          <a
+            className="text-foreground underline underline-offset-4"
+            href="https://github.com/qamarq/better-auth-evp"
+          >
+            better-auth-evp
+          </a>{" "}
+          (
+          <a
+            className="text-foreground underline underline-offset-4"
+            href="https://www.npmjs.com/package/better-auth-evp"
+          >
+            npm
+          </a>
+          ), a Better Auth plugin implementing this flow.
+        </p>
+      </div>
     </div>
   );
 }
