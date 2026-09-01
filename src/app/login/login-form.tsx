@@ -5,16 +5,25 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  Field,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+} from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { authClient } from "@/lib/auth-client";
 
 export function LoginForm({ nonce }: { nonce: string }) {
   const router = useRouter();
-  const [status, setStatus] = useState<"idle" | "verifying" | "failed">(
-    "idle",
-  );
+  const [status, setStatus] = useState<"idle" | "verifying" | "failed">("idle");
   const [reason, setReason] = useState<string | null>(null);
 
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -94,7 +103,9 @@ export function LoginForm({ nonce }: { nonce: string }) {
 
       <div className="text-muted-foreground w-full max-w-sm space-y-4 text-sm">
         <div className="space-y-1">
-          <h2 className="text-foreground font-medium">What&apos;s going on here?</h2>
+          <h2 className="text-foreground font-medium">
+            What&apos;s going on here?
+          </h2>
           <p>
             Typing your address lets Chrome ask your mailbox provider, behind
             the scenes, whether you&apos;re currently signed in there. If you

@@ -34,7 +34,7 @@ pnpm dev
 
 ## Why it might still do nothing
 
-EVP requires the *mailbox provider* to participate too - the email's domain
+EVP requires the _mailbox provider_ to participate too - the email's domain
 needs an `_email-verification` DNS TXT record pointing at an issuer, and
 that issuer needs to actually support the protocol. Most domains, including
 plenty of Gmail/Workspace-hosted ones, don't have this yet. If verification

@@ -1,0 +1,6 @@
+.next
+node_modules
+pnpm-lock.yaml
+tsconfig.tsbuildinfo
+better-auth_migrations
+*.db

@@ -5,6 +5,12 @@ import nextTs from "eslint-config-next/typescript";
 const eslintConfig = defineConfig([
   ...nextVitals,
   ...nextTs,
+  {
+    // Pin the React version instead of letting eslint-plugin-react
+    // autodetect it: autodetection calls context.getFilename(), which
+    // ESLint 10 removed, and crashes every lint run.
+    settings: { react: { version: "19.2.8" } },
+  },
   // Override default ignores of eslint-config-next.
   globalIgnores([
     // Default ignores of eslint-config-next:
